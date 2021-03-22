@@ -5,7 +5,7 @@
 
 typedef struct 
 {
-    char pseudo[TAILLE_MAX];
+    char* pseudo;
     int score;
 }score;
 typedef struct{
@@ -14,8 +14,9 @@ typedef struct{
 
 
 int writeScore(int score);
-highScore triScore(char tab[10][TAILLE_MAX+20]);
-highScore topScore();
+void triScore(int nb,char tab[nb][TAILLE_MAX+20]);
+void topScore();
+void afficherScore(highScore);
 
 
 // ecrire pseudo et score user dans un scores.txt
