@@ -92,6 +92,7 @@ void topScore(){
 // pas appui entree -> entree automatique 
 
 void afficherNiveau(int difficulte){
+  int temp=1000000;
   char niveau[1024]="                          COUCOU MME LE GLAZ ON VOUS AIME";
   int i,longueur=strlen(niveau);
   char random[1024] = "\n\n\n\n\t\t\t_\n\t\t\t_";
@@ -101,7 +102,7 @@ void afficherNiveau(int difficulte){
     decalerNiveau(niveau);
     strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_");
     strcat(random,niveau);
-    usleep(50000);
+    usleep(temp/difficulte);
     system("clear");
     printf("%s\n\n\n",random);
   }
