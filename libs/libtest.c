@@ -6,6 +6,7 @@ int main(){
     writeScore(2);
     writeScore(20);*/
     //topScore();
-    afficherNiveau(10);
+   // afficherNiveau(10);
+    getSaisie();
     return 0;
 }

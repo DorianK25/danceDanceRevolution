@@ -117,3 +117,11 @@ void decalerNiveau(char niveau[1024]){
     } 
   }
 }
+
+void getSaisie(){
+  char c; 
+  initscr();
+  c= getch();
+  endwin();
+  printf("%c",c);
+}
