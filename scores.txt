@@ -1,0 +1,12 @@
+Pseudo:Senior;Score:30
+Pseudo:Grogu;Score:70
+Pseudo:Théodorine;Score:2
+Pseudo:Dorian;Score:20
+Pseudo:Senior1;Score:40
+Pseudo:Grogu1;Score:73
+Pseudo:Théodorine1;Score:4
+Pseudo:Dorian1;Score:27
+Pseudo:Senior2;Score:34
+Pseudo:Grogu2;Score:78
+Pseudo:Théodorine2;Score:22
+Pseudo:Dorian2;Score:29
