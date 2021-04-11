@@ -34,8 +34,6 @@ void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
     score[i]=atoi(tempoString);
   }
 
-  
-
   for(i=0;i<nb-1;i++)
       for(j=i+1;j<nb;j++)
           if ( score[i] < score[j] ) {
@@ -124,4 +122,86 @@ void getSaisie(){
   c= getch();
   endwin();
   printf("%c",c);
+}
+
+int writeRoom(char* idSalle, int idProcessus)
+{
+    FILE* fichier = NULL;
+    fichier=fopen("room.txt","a");
+
+    if (fichier != NULL)
+    {
+      fprintf(fichier, "%s;",idSalle);
+      fprintf(fichier,"%d\n",idProcessus);
+      fclose(fichier);
+    }
+    return 0;
+}
+
+int readRoom(char* idSalle){
+  FILE* fichier = NULL;
+  char* idRoom;
+  fichier=fopen("room.txt","r");
+  char buff[TAILLE_MAX+20];
+  int i=0;
+  if(fichier != NULL){
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      i++;
+    }
+    char tab[i][TAILLE_MAX+20];
+    fichier=fopen("room.txt","r");
+    i=0;
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      strcpy(tab[i],buff);
+      idRoom=strtok(tab[i],";");
+
+      if(!strcmp(idSalle,idRoom)){
+        fclose(fichier);
+        return atoi(strtok(NULL,";"));
+      }
+      i++;
+    }
+  }else{
+    printf("\nFichier room.txt non disponible\n");
+  }
+  fclose(fichier);
+  return -1;
+}
+
+void deleteRoom(char* idSalle){
+  FILE* fichier = NULL;
+  FILE* fichier2 = NULL;
+  char* idRoom;
+  char* idProcessus = strtok(NULL,";");
+  fichier=fopen("room.txt","r");
+  fichier2 =fopen("temproom.txt","a");
+  char buff[TAILLE_MAX+20];
+  int i=0;
+  if(fichier != NULL){
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      i++;
+    }
+    char tab[i][TAILLE_MAX+20];
+    fichier=fopen("room.txt","r");
+    i=0;
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      strcpy(tab[i],buff);
+      idRoom=strtok(tab[i],";");
+      idProcessus=strtok(NULL,";");
+        if(strcmp(idSalle,idRoom)!=0){
+          fprintf(fichier2, "%s;",idRoom);
+          fprintf(fichier2,"%s\n",idProcessus);
+        }
+      i++;
+    }
+  }else{
+    printf("\nFichier room.txt non disponible\n");
+  }
+  fclose(fichier2);
+  rename("temproom.txt","room.txt");
+  fclose(fichier);
 }

@@ -7,6 +7,10 @@ int main(){
     writeScore(20);*/
     //topScore();
    // afficherNiveau(10);
-    getSaisie();
+    //getSaisie();
+   // writeRoom("Salle1", getpid());
+   deleteRoom("Salle1");
+    printf("%d",readRoom("Salle1"));
+    
     return 0;
 }
