@@ -9,6 +9,8 @@ int main(){
    // afficherNiveau(10);
     //getSaisie();
    // writeRoom("Salle1", getpid());
-    readRoom();
+   deleteRoom("Salle1");
+    printf("%d",readRoom("Salle1"));
+    
     return 0;
 }

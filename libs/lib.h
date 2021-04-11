@@ -29,7 +29,8 @@ void afficherNiveau(int difficulte);
 void decalerNiveau(char niveau[1024]);
 void getSaisie();
 int writeRoom(char* idSalle, int idProcessus);
-void readRoom();
+int readRoom(char* idSalle);
+void deleteRoom(char* idRoom);
 
 
 
