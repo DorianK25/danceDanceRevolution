@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <curses.h>
 #define TAILLE_MAX 256
 
 typedef struct 
@@ -17,10 +19,10 @@ int writeScore(int score);
 void triScore(int nb,char tab[nb][TAILLE_MAX+20]);
 void topScore();
 void afficherScore(highScore);
+void afficherNiveau(int difficulte);
+void decalerNiveau(char niveau[1024]);
+void getSaisie();
 
-
-// ecrire pseudo et score user dans un scores.txt
-// afficher top des scores
 
 
 

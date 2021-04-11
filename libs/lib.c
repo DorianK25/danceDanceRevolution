@@ -85,3 +85,43 @@ void topScore(){
     printf("\nFichier scores.txt non disponible\n");
   }
 }
+
+// creer fonction qui va appeler 2 threads enfants
+// 1 pour la lecture du clavier
+// 1 pour afficher lettres à saisi
+// pas appui entree -> entree automatique 
+
+void afficherNiveau(int difficulte){
+  int temp=1000000;
+  char niveau[1024]="                          COUCOU MME LE GLAZ ON VOUS AIME";
+  int i,longueur=strlen(niveau);
+  char random[1024] = "\n\n\n\n\t\t\t_\n\t\t\t_";
+  strcat(random,niveau);
+  printf("%s\n\n\n",random);
+  for(i=0;i<longueur;i++){
+    decalerNiveau(niveau);
+    strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_");
+    strcat(random,niveau);
+    usleep(temp/difficulte);
+    system("clear");
+    printf("%s\n\n\n",random);
+  }
+}
+
+void decalerNiveau(char niveau[1024]){
+  int i=1;
+  if(strlen(niveau)!=0){
+    while(niveau[i-1] != '\0'){
+    niveau[i-1] = niveau[i];
+    i++;
+    } 
+  }
+}
+
+void getSaisie(){
+  char c; 
+  initscr();
+  c= getch();
+  endwin();
+  printf("%c",c);
+}
