@@ -125,3 +125,41 @@ void getSaisie(){
   endwin();
   printf("%c",c);
 }
+
+int writeRoom(char* idSalle, int idProcessus)
+{
+    FILE* fichier = NULL;
+    fichier=fopen("room.txt","a");
+
+    if (fichier != NULL)
+    {
+      fprintf(fichier, "%s;",idSalle);
+      fprintf(fichier,"%d\n",idProcessus);
+      fclose(fichier);
+    }
+    return 0;
+}
+
+void readRoom(){
+  FILE* fichier = NULL;
+  room null;
+  fichier=fopen("room.txt","r");
+  char buff[TAILLE_MAX+20];
+  int i=0;
+  if(fichier != NULL){
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      i++;
+    }
+    char tab[i][TAILLE_MAX+20];
+    fichier=fopen("room.txt","r");
+    i=0;
+    while (fscanf(fichier,"%s",buff) != EOF)
+    {
+      strcpy(tab[i],buff);
+      i++;
+    }
+  }else{
+    printf("\nFichier room.txt non disponible\n");
+  }
+}

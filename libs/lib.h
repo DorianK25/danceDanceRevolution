@@ -14,6 +14,12 @@ typedef struct{
     score top[10];
 }highScore; 
 
+typedef struct{
+   char idSalle;
+   int idProcessus;
+}room;
+
+
 
 int writeScore(int score);
 void triScore(int nb,char tab[nb][TAILLE_MAX+20]);
@@ -22,6 +28,8 @@ void afficherScore(highScore);
 void afficherNiveau(int difficulte);
 void decalerNiveau(char niveau[1024]);
 void getSaisie();
+int writeRoom(char* idSalle, int idProcessus);
+void readRoom();
 
 
 

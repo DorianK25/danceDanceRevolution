@@ -7,6 +7,8 @@ int main(){
     writeScore(20);*/
     //topScore();
    // afficherNiveau(10);
-    getSaisie();
+    //getSaisie();
+   // writeRoom("Salle1", getpid());
+    readRoom();
     return 0;
 }
