@@ -1,5 +1,5 @@
 install: lib.o
-	gcc lib.o script.c -o dance.exe
+	gcc lib.o script.c -o dance.exe -lncurses
 	rm lib.o
 uninstall:
 	rm dance.exe
