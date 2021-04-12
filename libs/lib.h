@@ -38,6 +38,13 @@ int editSegment(int,int,struct shmid_ds *);
 int detachSegment(char * );
 char * attachSegment(int);
 int deleteSegment(int,struct shmid_ds *);
+typedef struct{
+   char idSalle;
+   int idProcessus;
+}room;
+
+
+
 int writeScore(int score);
 void triScore(int nb,char tab[nb][TAILLE_MAX+20]);
 void topScore();
@@ -45,8 +52,12 @@ void afficherScore(highScore);
 void afficherNiveau(int difficulte);
 void decalerNiveau(char niveau[1024]);
 char getSaisie();
- void itoa(int n, char s[]);
- void reverse(char s[]);
+void itoa(int n, char s[]);
+void reverse(char s[]);
+char getSaisie();
+int writeRoom(char* idSalle, int idProcessus);
+int readRoom(char* idSalle);
+void deleteRoom(char* idRoom);
 
 
 
