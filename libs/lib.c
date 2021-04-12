@@ -1,5 +1,93 @@
 #include "lib.h"
 
+ void reverse(char s[])
+ {
+     int i, j;
+     char c;
+ 
+     for (i = 0, j = strlen(s)-1; i<j; i++, j--) {
+         c = s[i];
+         s[i] = s[j];
+         s[j] = c;
+     }
+ }
+
+ void itoa(int n, char s[])
+ {
+     int i, sign;
+ 
+     if ((sign = n) < 0)  /* record sign */
+         n = -n;          /* make n positive */
+     i = 0;
+     do {       /* generate digits in reverse order */
+         s[i++] = n % 10 + '0';   /* get next digit */
+     } while ((n /= 10) > 0);     /* delete it */
+     if (sign < 0)
+         s[i++] = '-';
+     s[i] = '\0';
+     reverse(s);
+ }
+
+int createSegment(int size){
+
+    key_t key=IPC_PRIVATE;
+    int right=0666 | IPC_CREAT | IPC_EXCL;
+    int segment = shmget(key,sizeof(char)*size,right);
+
+    if(segment==-1){
+        fprintf(stderr,"%s","Une erreur s'est produite\n");
+    }
+
+    return segment;
+
+}
+
+char * attachSegment(int segment){
+
+    char * attachement=shmat(segment,NULL,0);
+
+    if(attachement==(char*)-1){
+        fprintf(stderr,"%s","Une erreur s'est produite");
+    }
+
+    return attachement;
+
+}
+
+int detachSegment(char * attachement){
+
+    int result = shmdt(attachement);
+
+    if(result==-1){
+        fprintf(stderr,"%s","Une erreur s'est produite");
+    }
+
+    return result;
+
+}
+
+int editSegment(int segment,int cmd,struct shmid_ds *buf){
+    int result = shmctl(segment,cmd,buf);
+    if(result==-1){
+        fprintf(stderr,"%s","Une erreur s'est produite");
+    }
+
+    return result;
+}
+
+int deleteSegment(int segment,struct shmid_ds *buf){
+    int result = shmctl(segment,IPC_RMID,buf);
+    if(result==-1){
+        fprintf(stderr,"%s","Une erreur s'est produite");
+    }
+
+    return result;
+}
+
+
+
+
+
 int getMode(){
     int mode=-1;
     while( mode != 2 && mode != 1 ){
@@ -46,6 +134,8 @@ int getDifficulty(){
 
 void printInfoMessage(){
     printf("\n\n Erreur lors de l'execution du Programme !!! \n\n");
+}
+
 int writeScore(int score)
 {
     char pseudo[TAILLE_MAX];
@@ -72,7 +162,7 @@ void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
   char tri[nb][TAILLE_MAX+20];
   int i=0,j=0;
   highScore topScore;
-  for(i=0;i<10;i++){
+  for(i=0;i<nb;i++){
     pseudo[i]=strtok(tab[i],";");
     strcat(pseudo[i],"\0");
     tempoString=strtok(NULL,";");
@@ -94,14 +184,15 @@ void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
           }
 
   
-
-  for(i=0;i<10;i++){
+  if(nb>10)
+    nb=10;
+  for(i=0;i<nb;i++){
     topScore.top[i].pseudo=pseudo[i];
     topScore.top[i].score=score[i];
   }
 
   printf("\t\t Joueur : Score\n\n");
-  for(i=0;i<10;i++){
+  for(i=0;i<nb;i++){
     printf("\t\t %s : %d\n",topScore.top[i].pseudo,topScore.top[i].score);
   }
 
@@ -138,21 +229,61 @@ void topScore(){
 // pas appui entree -> entree automatique 
 
 void afficherNiveau(int difficulte){
+  struct shmid_ds buf ;
+  int idSegment=createSegment(100);
+  editSegment(idSegment,IPC_STAT,&buf);
+  
+  char * partFils=attachSegment(idSegment);
   int temp=1000000;
-  char niveau[1024]="                          COUCOU MME LE GLAZ ON VOUS AIME";
-  int i,longueur=strlen(niveau);
   char random[1024] = "\n\n\n\n\t\t\t_\n\t\t\t_";
+  char niveau[1024]="        coucou madame leglaz";
+  int i,longueur=strlen(niveau);
   strcat(random,niveau);
-  printf("%s\n\n\n",random);
-  for(i=0;i<longueur;i++){
-    decalerNiveau(niveau);
-    strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_");
-    strcat(random,niveau);
-    usleep(temp/difficulte);
+  printf("fini");
+  strcpy(partFils,niveau);
+
+  int id=fork();
+  if(id == 0){
+    
+    //kill(getppid(),SIGINT);
+    //printf("%s\n\n\n",random);
+    for(i=0;i<longueur;i++){
+      decalerNiveau(niveau);
+      strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_");
+      strcat(random,niveau);
+      usleep(temp/difficulte);
+      system("clear");
+      printf("%s\n\n\n",random);
+      strcpy(partFils,niveau);
+    }
     system("clear");
-    printf("%s\n\n\n",random);
-  }
+    printf("\t\t appuyer sur Entree pour voir votre score");
+    //kill(getppid(), SIGKILL);
+    exit(1);
+  }else{
+    //pere
+  printf("debut");
+  int i=0;
+  char c;
+  char * partPere=attachSegment(idSegment);
+  
+  do
+  {
+    scanf("%c",&c);
+   // printf("%d",strlen(partPere));
+   if(c==partPere[0])
+    i++;
+    
+  }while (strlen(partPere)!=0);
+  system("clear");
+  printf("\t\t Votre score est de %d points\n\n",i);
+  writeScore(i);
+  topScore();
+  exit(1);
+  } 
 }
+
+
 
 void decalerNiveau(char niveau[1024]){
   int i=1;
@@ -164,10 +295,10 @@ void decalerNiveau(char niveau[1024]){
   }
 }
 
-void getSaisie(){
+char getSaisie(){
   char c; 
   initscr();
   c= getch();
   endwin();
-  printf("%c",c);
+  return c;
 }

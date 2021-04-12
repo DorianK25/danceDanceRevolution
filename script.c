@@ -23,6 +23,7 @@ int main(int argc, char *argv[]){
     {
     case 1:
         printf("mode %d joueur, difficulté : %d\n",mode,difficulty);
+        afficherNiveau(difficulty);
         break;
     case 2:
         printf("mode %d joueur, difficulté : %d, code : %s\n",mode,difficulty,code);
