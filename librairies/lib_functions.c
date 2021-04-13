@@ -1,4 +1,4 @@
-#include "lib.h"
+#include "lib_functions.h"
 
 /**
  * Fonction qui inverse une chaine de caractere
@@ -10,7 +10,7 @@
      int i, j;
      char c;// variable pour la temporisation lors de l'échange de 2 caractères
     
-     for (i = 0, j = strlen(s)-1; i<j; i++, j--) { // on inverse toute les lettre avec leur opposées jusqu'a la moitié
+     for (i = 0, j = strlen(s)-1; i<j; i++, j--) { // on inverse toutes les lettres avec leur opposé jusqu'a la moitié
          c = s[i];
          s[i] = s[j];
          s[j] = c;
@@ -21,7 +21,7 @@
  * Fonction qui transforme un int en chaine de caractere
  * 
  * @param s : chaine de caractère qui recevra l'int
- * @param n : int a transformé
+ * @param n : int a transformer
  */
  void itoa(int n, char s[])
  {
@@ -40,15 +40,15 @@
  }
 
 /**
- * Fonction qui creer un segment
+ * Fonction qui cree un segment
  * 
  * @param size : taille du segment
  */
 int createSegment(int size){
 
     key_t key=IPC_PRIVATE;// clé pour la création de notre segment
-    int right=0666 | IPC_CREAT | IPC_EXCL;// droit du segments
-    int segment = shmget(key,sizeof(char)*size,right);// creer notre segments et on recupère l'id
+    int right=0666 | IPC_CREAT | IPC_EXCL;// droit du segment
+    int segment = shmget(key,sizeof(char)*size,right);// creer notre segment et on recupère l'id
 
     if(segment==-1){ // si erreur 
         fprintf(stderr,"%s","Une erreur s'est produite\n");
@@ -65,9 +65,9 @@ int createSegment(int size){
  */
 char * attachSegment(int segment){
 
-    char * attachement=shmat(segment,NULL,0); // on attache le sehment une une variable de type chaine de caractère
+    char * attachement=shmat(segment,NULL,0); // on attache le segment à une variable de type chaine de caractère
 
-    if(attachement==(char*)-1){ // si error
+    if(attachement==(char*)-1){ // si erreur
         fprintf(stderr,"%s","Une erreur s'est produite");
     }
 
@@ -100,7 +100,7 @@ int detachSegment(char * attachement){
  * @param buf : structure accueillant les infos 
  */
 int editSegment(int segment,int cmd,struct shmid_ds *buf){
-    int result = shmctl(segment,cmd,buf); // on effectur une commande sur le segment
+    int result = shmctl(segment,cmd,buf); // on effectue une commande sur le segment
     if(result==-1){ // si erreur
         fprintf(stderr,"%s","Une erreur s'est produite");
     }
@@ -133,7 +133,12 @@ int getMode(){
     while( mode != 2 && mode != 1 ){
         printf("\t\t --- 1 : 1 joueur --- \n");
         printf("\t\t --- 2 : 2 joueurs --- \n");
-        scanf("%d",&mode);// demande a l'utilisateur de saisir le mode
+        scanf("%d",&mode);
+        while(scanf("%d",&mode) != 1) // demande à l'utilisateur de saisir le mode
+        {
+            printf("Entrez un ENTIER : ");
+            while(getchar() != '\n');
+        }
     }
     return mode;
 }
@@ -142,8 +147,8 @@ int getMode(){
  * Fonction qui permet de donner le code
  */
 void getCode(char *chaineAleatoire){
-    int i, longueurChaine = 0; // on initialise les variable que l'on utilisera
-    char chaine[] = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // toutes les variables possible
+    int i, longueurChaine = 0; // on initialise les variables que l'on utilisera
+    char chaine[] = "abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; // toutes les variables possibles
  
     longueurChaine = strlen(chaine); // nombre de caractère différents
  
@@ -158,10 +163,10 @@ void getCode(char *chaineAleatoire){
 }
 
 /**
- * Fonction qui permet a l'utilisateur de choisir la difficulté
+ * Fonction qui permet à l'utilisateur de choisir la difficulté
  */
 int getDifficulty(){
-    int code=-1; // on initialise la variable pou que l'on rentre dans le while
+    int code=-1; // on initialise la variable pour que l'on rentre dans le while
     while( code < 1 || code > 10 ){
         printf("\t\t --- 1 : Niveau 1 --- \n");
         printf("\t\t --- 2 : Niveau 2 --- \n");
@@ -173,7 +178,11 @@ int getDifficulty(){
         printf("\t\t --- 8 : Niveau 8 --- \n");
         printf("\t\t --- 9 : Niveau 9 --- \n");
         printf("\t\t --- 10 : Niveau 10 --- \n");
-        scanf("%d",&code);// demande a l'utilisateur de saisir le code
+        while(scanf("%d",&code) != 1) // demande à l'utilisateur de saisir le code
+          {
+              printf("Entrez un ENTIER : ");
+              while(getchar() != '\n');
+          }
     }
     return code;
 }
@@ -200,7 +209,7 @@ int writeScore(int score)
 
     if (fichier != NULL)
     {
-      fprintf(fichier, "%s;%s\n",pseudo,score);// on ecrit le pseudo puis un ; pour separer du score puis le score
+      fprintf(fichier, "%s;%d\n",pseudo,score);// on ecrit le pseudo puis un ; pour separer du score puis le score
       fclose(fichier);// on ferme le fichier
     }
     return 0;
@@ -248,7 +257,7 @@ void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
   if(nb>10)//s'il y a plus de 10 scores inscrit on s'arrete a 10
     nb=10;
 
-  for(i=0;i<nb;i++){// on allimente la structure topScore
+  for(i=0;i<nb;i++){// on alimente la structure topScore
     topScore.top[i].pseudo=pseudo[i];
     topScore.top[i].score=score[i];
   }
@@ -272,7 +281,7 @@ void topScore(){
   int i=0;
   if(fichier != NULL){ // si on trouve le fichier
 
-    // on compte le nombre de ligne
+    // on compte le nombre de lignes
     while (fscanf(fichier,"%s",buff) != EOF)
     {
       i++;
@@ -294,16 +303,16 @@ void topScore(){
 }
  
 /**
- * Fonction principale qui permet d'afficher le niveau en fonction de la difficulté tout en recuperant l'entré clavier et retourne le score
+ * Fonction principale qui permet d'afficher le niveau en fonction de la difficulté tout en recuperant l'entrée clavier et retourne le score
  * @param difficulte : difficulté du niveau
  */
 int afficherNiveau(int difficulte){
   struct shmid_ds buf ;// on initialise la strucuture
-  int idSegment=createSegment(100); // on creer le segment
+  int idSegment=createSegment(100); // on cree le segment
   editSegment(idSegment,IPC_STAT,&buf); // on lui demande les infos
   
   char * partFils=attachSegment(idSegment);// on attache le segment
-  int temp=1000000;// cela correspondra a 1 000 000 micros secondes soit 1 secondes
+  int temp=1000000;// cela correspondra à 1 000 000 micros secondes soit 1 secondes
   char random[1024] = "\n\n\n\n\t\t\t_\n\t\t\t_";// entête du niveau
   char niveau[1024]="        coucou madame leglaz";// niveau
 
@@ -311,16 +320,16 @@ int afficherNiveau(int difficulte){
   strcat(random,niveau);// on associe le niveau a l'entête
   strcpy(partFils,niveau);// on met le niveau dans notre mémoire partagée
 
-  int id=fork(); // on creer un fils
+  int id=fork(); // on cree un fils
   if(id == 0){
     // si fils 
 
     for(i=0;i<longueur;i++){// on decale le niveau jusqu'a la fin
       decalerNiveau(niveau);// on decale le niveau
-      strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_"); // on recreer l'entête
+      strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_"); // on recree l'entête
       strcat(random,niveau); // on associe le niveau a l'entête
       usleep(temp/difficulte); // temporisation en fonction de la difficulté 
-      system("clear");// on clear le terminale pour donner l'ilusion d'un simple déplacement vers la droit (esthétique)
+      system("clear");// on clear le terminal pour donner l'illusion d'un simple déplacement vers la droite (esthétique)
       printf("%s\n\n\n",random);// on affiche le niveau
       strcpy(partFils,niveau);// on copie de nouveau le niveau décalé dans la mémoire partagée
     }
@@ -334,8 +343,8 @@ int afficherNiveau(int difficulte){
     char * partPere=attachSegment(idSegment);// on attache le segment
   
     do{
-      scanf("%c",&c);// on demande a l'utilisateur le caractère
-    if(c==partPere[0])// si le caratcère correspond incrémente les points en fonction de la diffiulté
+      scanf("%c",&c);// on demande à l'utilisateur le caractère
+    if(c==partPere[0])// si le caractère correspond incrémente les points en fonction de la difficulté
       i+=difficulte;
 
       
@@ -346,9 +355,9 @@ int afficherNiveau(int difficulte){
 
 
 /**
- * Fonction qui decale vers la gauche une chaine de caractère
+ * Fonction qui décale vers la gauche une chaine de caractère
  * 
- * @param niveau : chaine de caractère a décaler
+ * @param niveau : chaine de caractère à décaler
  */
 void decalerNiveau(char niveau[1024]){
   int i=1;
@@ -362,7 +371,7 @@ void decalerNiveau(char niveau[1024]){
 
 
 /**
- * Fonction qui ecrit la salle dans le fichier room.txt
+ * Fonction qui écrit la salle dans le fichier room.txt
  * 
  * @param idSalle : code de la salle
  * @param idProcessus : code du processus
@@ -387,7 +396,7 @@ int writeRoom(char* idSalle, int idProcessus)
  */
 int readRoom(char* idSalle){
   FILE* fichier = NULL; // on initialise le fichier
-  char* idRoom;// on initialise l'i de la salle
+  char* idRoom;// on initialise l'id de la salle
   fichier=fopen("room.txt","r");// on ouvre le fichier texte des salles
   char buff[TAILLE_MAX+20];// on initialise le buffer
   int i=0;
@@ -407,9 +416,9 @@ int readRoom(char* idSalle){
       strcpy(tab[i],buff);// on copie la ligne dans le tableau
       idRoom=strtok(tab[i],";");// on associe l'id de la salle 
 
-      if(!strcmp(idSalle,idRoom)){// si l'id de la salle passé en param correspond a l'id de la salle du texte  
+      if(!strcmp(idSalle,idRoom)){// si l'id de la salle passé en param correspond à l'id de la salle du texte  
         fclose(fichier);
-        return atoi(strtok(NULL,";"));// on retourn l'id du processus
+        return atoi(strtok(NULL,";"));// on retourne l'id du processus
       }
       i++;
     }
@@ -417,7 +426,7 @@ int readRoom(char* idSalle){
     printf("\nFichier room.txt non disponible\n");
   }
   fclose(fichier);// on ferme le fichier
-  return -1;// si pas de salle trouvé
+  return -1;// si pas de salle trouvée
 }
 
 /**
@@ -437,20 +446,20 @@ void deleteRoom(char* idSalle){
   if(fichier != NULL){
     //si le fichier existe
 
-    //on calcul le nombre de ligne
+    //on calcule le nombre de ligne
     while (fscanf(fichier,"%s",buff) != EOF)
     {
       i++;
     }
-    char tab[i][TAILLE_MAX+20];// on initialise le tableau en fonction du nombre de ligne
+    char tab[i][TAILLE_MAX+20];// on initialise le tableau en fonction du nombre de lignes
     fichier=fopen("room.txt","r");// on réouvre le fichier
     i=0;
     while (fscanf(fichier,"%s",buff) != EOF)
     {
-      strcpy(tab[i],buff);// on copy le buffer dans le tableau
+      strcpy(tab[i],buff);// on copie le buffer dans le tableau
       idRoom=strtok(tab[i],";");// on stock l'id de la salle
       idProcessus=strtok(NULL,";");// on stock l'id du preocessus
-        if(strcmp(idSalle,idRoom)!=0){ // si l'id de la salle est identique a l'id de salle passé en paramère on n'écrit pas dans le fichier de temporisation
+        if(strcmp(idSalle,idRoom)!=0){ // si l'id de la salle est identique a l'id de salle passé en paramètre on n'écrit pas dans le fichier de temporisation
           fprintf(fichier2, "%s;%s\n",idRoom,idProcessus);// on ecrit dans le fichier de temporisation
         }
       i++;
@@ -459,6 +468,6 @@ void deleteRoom(char* idSalle){
     printf("\nFichier room.txt non disponible\n");
   }
   fclose(fichier2);// on ferme le fichier de temporisation
-  rename("temproom.txt","room.txt");// on le renommen en fichier des salles pour écraser le précédent (recopie sauf si salle identique)
+  rename("temproom.txt","room.txt");// on le renomme en fichier des salles pour écraser le précédent (recopie sauf si salle identique)
   fclose(fichier);// on ferme le fichier
 }

@@ -1,10 +1,10 @@
-install: lib.o
-	gcc lib.o script.c -o dance.exe -lncurses
-	rm lib.o
+install: lib_functions.o
+	gcc lib_functions.o main.c -o dance.exe -lncurses
+	rm lib_functions.o
 uninstall:
 	rm dance.exe
-test : lib.o 
-	gcc lib.o libs/libtest.c -o  libtest.exe -lncurses
+test : lib_functions.o 
+	gcc lib_functions.o librairies/libtest.c -o  libtest.exe -lncurses
 	rm lib.o
-lib.o : libs/lib.c
-	gcc -c libs/lib.c -lncurses
+lib.o : librairies/lib_functions.c
+	gcc -c librairies/lib_functions.c -lncurses

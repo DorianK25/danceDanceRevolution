@@ -1,4 +1,4 @@
-#include "lib.h"
+#include "lib_functions.h"
 
 int main(){
    /* writeScore(30);
@@ -10,8 +10,9 @@ int main(){
     //getSaisie();
     //writeRoom("Salle1", getpid());
    //deleteRoom("Salle1");
-   char *idRoom=readRoom("Salle1");
-    printf("id Room : %s",idRoom);
-    
+  // char *idRoom=readRoom("Salle1");
+  //  printf("id Room : %s",idRoom);
+   // getDifficulty();
+   getMode();
     return 0;
 }

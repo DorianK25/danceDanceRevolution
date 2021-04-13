@@ -1,4 +1,4 @@
-#include "libs/lib.h"
+#include "librairies/lib_functions.h"
 
 int main(int argc, char *argv[]){
 
@@ -60,13 +60,13 @@ int main(int argc, char *argv[]){
         */
         itoa(id,idProcessus);//on met le pid du processus de l'adverssaire en chaine de caractère
         strcat(nomTube,idProcessus);//on concatène pour place le tube nommé dans le repertoire courant
-        strcpy(code,argv[1]);//on attribut le code a notre processus
-        tubeEnvoi=open(idProcessus, O_RDWR);//ouverture du tube d'envoie
+        strcpy(code,argv[1]);//on attribut le code à notre processus
+        tubeEnvoi=open(idProcessus, O_RDWR);//ouverture du tube d'envoi
         itoa(getpid(),buf);//on met le pid de notre processus en chaine de caractère
-        strcpy(nomTube,"./");//on attribut le nom du tube nommé à './' pour cibler le repertoir courant
+        strcpy(nomTube,"./");//on attribut le nom du tube nommé à './' pour cibler le repertoire courant
         strcat(nomTube,buf);//on concatène pour donner un id unique a notre nom de tube
-        mkfifo(buf, 0666);//on creer le tube nommé
-        tubeReception=open(nomTube, O_RDWR);//on ouvre le tube d'envoie
+        mkfifo(buf, 0666);//on cree le tube nommé
+        tubeReception=open(nomTube, O_RDWR);//on ouvre le tube d'envoi
         write(tubeEnvoi, buf, sizeof(buf));//on ecrit sur le tube d'envoie pour que le processus adverse reçoit le pid de notre processus
         read(tubeReception,buf,sizeof(buf));//on reçoit la difficulté par l'autre processus 
         difficulty=atoi(buf);//on le transforme en entier
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
         write(tubeEnvoi, buf, sizeof(buf));// envoie le score à l'adversaire
         printf("Attente du score de l'adversaire\n\n");
         read(tubeReception,buf,sizeof(buf));// recupère le score de l'adversaire
-        int adversaireScore=atoi(buf);//on changer la chaine de caractère en entier
+        int adversaireScore=atoi(buf);//on change la chaine de caractère en entier
         printf("Le score de l'adversaire est de : %d points \n\n",adversaireScore);
         /*
             COMPARAISON DES SCORES
