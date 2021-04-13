@@ -6,8 +6,8 @@ int main(int argc, char *argv[]){
     int tubeRecv;
     int tubeEnv;
     char code[11];
-    char *name;
-    char *pid;
+    char nomTube[100]="./";
+    char idP[100];
     char buf[250];
     if(argc == 1){
         //création
@@ -22,18 +22,16 @@ int main(int argc, char *argv[]){
         if(mode == 2){
             writeRoom(code,getpid());
             printf("Votre code de salle d'attente est : %s\n\n",code);
-            //itoa(getpid(),pid);
-            strcpy(name,"./");
-            strcat(name,pid);
-           // mkfifo(name, 0666);
-            //tubeRecv=open(name, O_RDWR);//on ouvre le tube1
-            strcpy(name,"./");
-            //read(tubeRecv,buf,sizeof(buf));
-            strcat(name,buf);
-           // tubeEnv=open(name, O_RDWR);
-           // itoa(difficulty,buf);
-           // write(tubeEnv, buf, sizeof(buf));//synchro
-           // read(tubeRecv,buf,sizeof(buf));
+            itoa(getpid(),idP);
+            strcat(nomTube,idP);
+            printf("%s",nomTube);
+            mkfifo(idP, 0666);
+            tubeRecv=open(nomTube, O_RDWR);//on ouvre le tube1
+            read(tubeRecv,buf,sizeof(buf));
+            tubeEnv=open(buf, O_RDWR);
+            itoa(difficulty,buf);
+            write(tubeEnv, buf, sizeof(buf));//synchro
+            read(tubeRecv,buf,sizeof(buf));
         }
         
         
@@ -44,20 +42,19 @@ int main(int argc, char *argv[]){
             printf("Salle non trouvée...\n\n");
             EXIT_FAILURE;
         }
-        itoa(id,pid);
-        strcpy(name,"./");
-        strcat(name,pid);
+        itoa(id,idP);
+        strcat(nomTube,idP);
         strcpy(code,argv[1]);
-       // tubeEnv=open(name, O_RDWR);
+        tubeEnv=open(idP, O_RDWR);
         itoa(getpid(),buf);
-        strcpy(name,"./");
-        strcat(name,buf);
-       // mkfifo(name, 0666);
-       // tubeRecv=open(name, O_RDWR);
-      //  write(tubeEnv, buf, sizeof(buf));
-      //  read(tubeRecv,buf,sizeof(buf));
+        strcpy(nomTube,"./");
+        strcat(nomTube,buf);
+        mkfifo(buf, 0666);
+        tubeRecv=open(nomTube, O_RDWR);
+        write(tubeEnv, buf, sizeof(buf));
+        read(tubeRecv,buf,sizeof(buf));
         difficulty=atoi(buf);
-       // write(tubeEnv, buf, sizeof(buf));
+        write(tubeEnv, buf, sizeof(buf));
     }else{
         printInfoMessage();
         return 0;
@@ -73,30 +70,23 @@ int main(int argc, char *argv[]){
         topScore();
         break;
     case 2:
-        printf("mode %d joueur, difficulté : %d\n",mode,difficulty);
+        printf("mode %d joueur, difficulté : %d, code : %s\n",mode,difficulty,code);
         int scoreJ = afficherNiveau(difficulty);
-        system("clear");
-        printf("\t\t Votre score est de %d points\n\n",scoreJ);
-        writeScore(scoreJ);
-        topScore();
-        break;
-        /*printf("mode %d joueur, difficulté : %d, code : %s\n",mode,difficulty,code);
-        int scoreJ = afficherNiveau(difficulty);
-        printf("%d",scoreJ);
+        printf("Votre score est de : %d points \n\n",scoreJ);
         itoa(scoreJ,buf);
         write(tubeEnv, buf, sizeof(buf));
         read(tubeRecv,buf,sizeof(buf));
         int adversaireScore=atoi(buf);
-        if(score<adversaireScore){
+        printf("Le score de l'adversaire est de : %d points \n\n",adversaireScore);
+        if(scoreJ<adversaireScore){
             printf("L'adversaire a gagné \n\n");
-        }else if(score>adversaireScore){
-            printf("Vous avez gagné");
+        }else if(scoreJ>adversaireScore){
+            printf("Vous avez gagné\n\n");
         }else
             printf("Egalité\n\n");
-
         close(tubeEnv);
         close(tubeRecv);
-        break;*/
+        break;
     default:
         break;
     }
