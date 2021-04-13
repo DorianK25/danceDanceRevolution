@@ -2,25 +2,25 @@
 
 int main(int argc, char *argv[]){
 
-    int mode,difficulty;
+    int mode,difficulty; // on initialise des variables mode et difficulte correspondant au mode du jeu ainsi qu'à sa difficulte
     int tubeRecv;
     int tubeEnv;
-    char code[11];
+    char code[11];// on initialise une variable code correspond au code de la salle de jeu
     char nomTube[100]="./";
     char idP[100];
     char buf[250];
     if(argc == 1){
         //création
         printf("Bonjour veuillez saisir votre Mode de jeu :\n\n");
-        mode=getMode();
-        difficulty=getDifficulty();
+        mode=getMode();// on recupere le mode choisi
+        difficulty=getDifficulty();//on recupere la difficulte choisie
         
         
 
         //Creation des tubes
 
         if(mode == 2){
-            getCode(code);
+            getCode(code);// on recupere le code de la salle
             writeRoom(code,getpid());
             printf("Votre code de salle d'attente est : %s\n\n",code);
             itoa(getpid(),idP);
@@ -35,15 +35,6 @@ int main(int argc, char *argv[]){
             read(tubeRecv,buf,sizeof(buf));
         }
         
-        
-    int mode,difficulty; // on initialise des variables mode et difficulte correspondant au mode du jeu ainsi qu'à sa difficulte
-    char code[11];// on initialise une variable code correspond au code de la salle de jeu
-    if(argc == 1){
-        //création
-        printf("Bonjour veuillez saisir votre Mode de jeu :\n\n");
-        mode=getMode();// on recupere le mode choisi
-        difficulty=getDifficulty();//on recupere la difficulte choisie
-        getCode(code);// on recupere le code de la salle
     }else if(argc == 2){
         mode=2;
         int id=readRoom(argv[1]);
@@ -96,6 +87,9 @@ int main(int argc, char *argv[]){
         }else
             printf("Egalité\n\n");
         close(tubeEnv);
+        /*snprintf(buf, sizeof(buf), "rm %d",getpid());
+        printf("%s\n",buf);
+        system(buf);*/
         close(tubeRecv);
         break;
     default:
