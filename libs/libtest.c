@@ -8,9 +8,10 @@ int main(){
     //topScore();
    // afficherNiveau(10);
     //getSaisie();
-   // writeRoom("Salle1", getpid());
-   deleteRoom("Salle1");
-    printf("%d",readRoom("Salle1"));
+    //writeRoom("Salle1", getpid());
+   //deleteRoom("Salle1");
+   char *idRoom=readRoom("Salle1");
+    printf("id Room : %s",idRoom);
     
     return 0;
 }

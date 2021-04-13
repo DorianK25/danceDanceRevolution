@@ -10,6 +10,7 @@
 #include <sys/shm.h>
 #include <sys/ipc.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <fcntl.h>
 #include <semaphore.h>
 #include <signal.h>
@@ -49,7 +50,7 @@ int writeScore(int score);
 void triScore(int nb,char tab[nb][TAILLE_MAX+20]);
 void topScore();
 void afficherScore(highScore);
-void afficherNiveau(int difficulte);
+int afficherNiveau(int difficulte);
 void decalerNiveau(char niveau[1024]);
 char getSaisie();
 void itoa(int n, char s[]);
