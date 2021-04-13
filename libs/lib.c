@@ -262,7 +262,6 @@ int afficherNiveau(int difficulte){
   
     do{
       scanf("%c",&c);
-    // printf("%d",strlen(partPere));
     if(c==partPere[0])
       i+=difficulte;
 

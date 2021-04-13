@@ -14,12 +14,13 @@ int main(int argc, char *argv[]){
         printf("Bonjour veuillez saisir votre Mode de jeu :\n\n");
         mode=getMode();
         difficulty=getDifficulty();
-        getCode(code);
+        
         
 
         //Creation des tubes
 
         if(mode == 2){
+            getCode(code);
             writeRoom(code,getpid());
             printf("Votre code de salle d'attente est : %s\n\n",code);
             itoa(getpid(),idP);
