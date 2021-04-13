@@ -153,6 +153,11 @@ int writeScore(int score)
     return 0;
 }
 
+/**
+ * Fonction qui trie les scores en fonction du plus fort
+ * @param nb 
+ * @param tab 
+ */
 void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
   char* pseudo[10];
   int score[10];
@@ -196,6 +201,10 @@ void triScore(int nb,char tab[nb][TAILLE_MAX+20]){
 
 }
 
+/**
+ * Fonction qui affiche le top des scores dans le fichier scores.txt
+ * 
+ */
 void topScore(){
   FILE* fichier = NULL;
   highScore null;
@@ -283,6 +292,11 @@ void decalerNiveau(char niveau[1024]){
   }
 }
 
+/**
+ * Fonction qui récupére la saisie clavier de l'utilisateur 
+ * 
+ * @return char 
+ */
 char getSaisie(){
   char c; 
   initscr();
@@ -291,6 +305,13 @@ char getSaisie(){
   return c;
 }
 
+/**
+ * Fonction qui ecrit la salle dans le fichier room.txt
+ * 
+ * @param idSalle 
+ * @param idProcessus 
+ * @return int 
+ */
 int writeRoom(char* idSalle, int idProcessus)
 {
     FILE* fichier = NULL;
@@ -305,6 +326,12 @@ int writeRoom(char* idSalle, int idProcessus)
     return 0;
 }
 
+/**
+ * Fonction qui lit la salle dans le fichier room.txt
+ * 
+ * @param idSalle 
+ * @return int 
+ */
 int readRoom(char* idSalle){
   FILE* fichier = NULL;
   char* idRoom;
@@ -337,6 +364,11 @@ int readRoom(char* idSalle){
   return -1;
 }
 
+/**
+ * Fonction qui supprime 
+ * 
+ * @param idSalle 
+ */
 void deleteRoom(char* idSalle){
   FILE* fichier = NULL;
   FILE* fichier2 = NULL;
