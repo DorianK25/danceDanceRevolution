@@ -1,5 +1,10 @@
 #include "lib.h"
 
+/**
+ * Fonction qui inverse une chaine de caractere
+ * 
+ * @param s 
+ */
  void reverse(char s[])
  {
      int i, j;
