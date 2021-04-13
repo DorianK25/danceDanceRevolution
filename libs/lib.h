@@ -15,15 +15,6 @@
 #include <signal.h>
 #define TAILLE_MAX 256
 
-int getMode();
-
-int getDifficulty();
-
-void getCode(char*);
-
-void printInfoMessage();
-
-
 typedef struct 
 {
     char* pseudo;
@@ -33,15 +24,19 @@ typedef struct{
     score top[10];
 }highScore; 
 
+int getMode();
+int getDifficulty();
+void getCode(char*);
+void printInfoMessage();
+
+
+
 int createSegment();
 int editSegment(int,int,struct shmid_ds *);
 int detachSegment(char * );
 char * attachSegment(int);
 int deleteSegment(int,struct shmid_ds *);
-typedef struct{
-   char idSalle;
-   int idProcessus;
-}room;
+
 
 
 
@@ -58,13 +53,3 @@ char getSaisie();
 int writeRoom(char* idSalle, int idProcessus);
 int readRoom(char* idSalle);
 void deleteRoom(char* idRoom);
-
-
-
-
-
-
-
-
-
-
