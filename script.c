@@ -39,71 +39,93 @@ int main(int argc, char *argv[]){
             read(tubeReception,buf,sizeof(buf));// on lit le tube de reception (nous attendons la venue de l'autre joueur)
             tubeEnvoi=open(buf, O_RDWR);// on ouvre le tube d'envoi
             itoa(difficulty,buf);// on transforme la difficulte en chaine de caractere
-            write(tubeEnvoi, buf, sizeof(buf));// on envoie la réponse de l'adversaire pour synchroniser
+            write(tubeEnvoi, buf, sizeof(buf));// on envoie la difficulté a l'autre processus
             read(tubeReception,buf,sizeof(buf));// on attend la réponse de l'adversaire pour synchroniser
         }
         
     }else if(argc == 2){
-        mode=2;
-        int id=readRoom(argv[1]);
+
+        /*
+            CAS : REJOINDRE
+        */
+        mode=2;// on precise que le mode est 2 joueurs 
+        int id=readRoom(argv[1]);// on va lire le pid du processus lancé par l'adversaire
         if(id==-1){
             printf("Salle non trouvée...\n\n");
             EXIT_FAILURE;
         }
-        itoa(id,idProcessus);
-        strcat(nomTube,idProcessus);
-        strcpy(code,argv[1]);
-        tubeEnvoi=open(idProcessus, O_RDWR);
-        itoa(getpid(),buf);
-        strcpy(nomTube,"./");
-        strcat(nomTube,buf);
-        mkfifo(buf, 0666);
-        tubeReception=open(nomTube, O_RDWR);
-        write(tubeEnvoi, buf, sizeof(buf));
-        read(tubeReception,buf,sizeof(buf));
-        difficulty=atoi(buf);
-        write(tubeEnvoi, buf, sizeof(buf));
+
+        /*
+            CRÉATION DES TUBES
+        */
+        itoa(id,idProcessus);//on met le pid du processus de l'adverssaire en chaine de caractère
+        strcat(nomTube,idProcessus);//on concatène pour place le tube nommé dans le repertoire courant
+        strcpy(code,argv[1]);//on attribut le code a notre processus
+        tubeEnvoi=open(idProcessus, O_RDWR);//ouverture du tube d'envoie
+        itoa(getpid(),buf);//on met le pid de notre processus en chaine de caractère
+        strcpy(nomTube,"./");//on attribut le nom du tube nommé à './' pour cibler le repertoir courant
+        strcat(nomTube,buf);//on concatène pour donner un id unique a notre nom de tube
+        mkfifo(buf, 0666);//on creer le tube nommé
+        tubeReception=open(nomTube, O_RDWR);//on ouvre le tube d'envoie
+        write(tubeEnvoi, buf, sizeof(buf));//on ecrit sur le tube d'envoie pour que le processus adverse reçoit le pid de notre processus
+        read(tubeReception,buf,sizeof(buf));//on reçoit la difficulté par l'autre processus 
+        difficulty=atoi(buf);//on le transforme en entier
+        write(tubeEnvoi, buf, sizeof(buf));//on ecrit pour dire que l'on est prêt pour synchroniser les 2 processus
     }else{
-        printInfoMessage();
+        /*
+            CAS : ERREURS
+        */
+        printInfoMessage();//on indique la norme pour lancer le programme
         return 0;
     }
     switch (mode)
     {
-    // correspond au mode solo du jeu 
+    /*
+        CAS : 1 JOUEUR
+    */ 
     case 1:
         printf("mode %d joueur, difficulté : %d\n",mode,difficulty);
-        int score = afficherNiveau(difficulty);
-        system("clear");
-        printf("\t\t Votre score est de %d points\n\n",score);
-        writeScore(score);
-        topScore();
+        int score = afficherNiveau(difficulty);//on recupere le score du joueur
+        system("clear");//on clear notre temrniale
+        printf("\t\t Votre score est de %d points\n\n",score);//on ecrit le score
+        writeScore(score);//on ecrit le score dans le fichier des scores
+        topScore();//on affiche le top des Scores
         break;
-    // correspond au mode multijoueur(2 joueurs) du jeu 
+
+    /*
+        CAS : 2 JOUEURS
+    */
     case 2:
         printf("mode %d joueur, difficulté : %d, code : %s\n",mode,difficulty,code);
-        int scoreJ = afficherNiveau(difficulty);
-        printf("Votre score est de : %d points \n\n",scoreJ);
-        itoa(scoreJ,buf);
-        write(tubeEnvoi, buf, sizeof(buf));
-        read(tubeReception,buf,sizeof(buf));
-        int adversaireScore=atoi(buf);
+        int scoreJoueur = afficherNiveau(difficulty);// recupère le scroe du joueur
+        printf("Votre score est de : %d points \n\n",scoreJoueur);
+        itoa(scoreJoueur,buf);// transforme le score en chaine de caractères
+        write(tubeEnvoi, buf, sizeof(buf));// envoie le score à l'adversaire
+        printf("Attente du score de l'adversaire\n\n");
+        read(tubeReception,buf,sizeof(buf));// recupère le score de l'adversaire
+        int adversaireScore=atoi(buf);//on changer la chaine de caractère en entier
         printf("Le score de l'adversaire est de : %d points \n\n",adversaireScore);
-        if(scoreJ<adversaireScore){
+        /*
+            COMPARAISON DES SCORES
+        */
+        if(scoreJoueur<adversaireScore){
             printf("L'adversaire a gagné \n\n");
-        }else if(scoreJ>adversaireScore){
+        }else if(scoreJoueur>adversaireScore){
             printf("Vous avez gagné\n\n");
         }else
             printf("Egalité\n\n");
-        close(tubeEnvoi);
-        snprintf(buf, sizeof(buf), "rm %d",getpid());
-        printf("%s\n",buf);
-        system(buf);
-        close(tubeReception);
+
+
+        close(tubeEnvoi);// ferme le 1er tube
+        snprintf(buf, sizeof(buf), "rm %d",getpid());//creer la commande pour supprimer le fichier du tube nommé
+        system(buf);//execute la commande précédente
+        close(tubeReception);// ferme le 2nd tube 
+
         break;
     default:
         break;
     }
     
-    deleteRoom(code);
+    deleteRoom(code);//on supprime 
     
 }
