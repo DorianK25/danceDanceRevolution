@@ -230,12 +230,12 @@ void topScore(){
   }
 }
 
-/**
- * Fonction qui affiche le niveau 
- * 
- * @param difficulte 
- */
-void afficherNiveau(int difficulte){
+// creer fonction qui va appeler 2 threads enfants
+// 1 pour la lecture du clavier
+// 1 pour afficher lettres à saisi
+// pas appui entree -> entree automatique 
+
+int afficherNiveau(int difficulte){
   struct shmid_ds buf ;
   int idSegment=createSegment(100);
   editSegment(idSegment,IPC_STAT,&buf);
@@ -251,9 +251,6 @@ void afficherNiveau(int difficulte){
 
   int id=fork();
   if(id == 0){
-    
-    //kill(getppid(),SIGINT);
-    //printf("%s\n\n\n",random);
     for(i=0;i<longueur;i++){
       decalerNiveau(niveau);
       strcpy(random,"\n\n\n\n\t\t\t_\n\t\t\t_");
@@ -265,28 +262,21 @@ void afficherNiveau(int difficulte){
     }
     system("clear");
     printf("\t\t appuyer sur Entree pour voir votre score");
-    //kill(getppid(), SIGKILL);
     exit(1);
   }else{
     //pere
-  printf("debut");
-  int i=0;
-  char c;
-  char * partPere=attachSegment(idSegment);
+    int i=0;
+    char c;
+    char * partPere=attachSegment(idSegment);
   
-  do
-  {
-    scanf("%c",&c);
-   // printf("%d",strlen(partPere));
-   if(c==partPere[0])
-    i++;
-    
-  }while (strlen(partPere)!=0);
-  system("clear");
-  printf("\t\t Votre score est de %d points\n\n",i);
-  writeScore(i);
-  topScore();
-  exit(1);
+    do{
+      scanf("%c",&c);
+    if(c==partPere[0])
+      i+=difficulte;
+
+      
+    }while (strlen(partPere)!=0);
+      return i;
   } 
 }
 
