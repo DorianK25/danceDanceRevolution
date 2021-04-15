@@ -314,7 +314,7 @@ int afficherNiveau(int difficulte){
   char * partFils=attachSegment(idSegment);// on attache le segment
   int temp=1000000;// cela correspondra à 1 000 000 micros secondes soit 1 secondes
   char random[1024] = "\n\n\n\n\t\t\t_\n\t\t\t_";// entête du niveau
-  char niveau[1024]="        coucou madame leglaz";// niveau
+  char niveau[1024]="        coucou madame leglaz on vous aime ";// niveau
 
   int i,longueur=strlen(niveau);// longueur du niveau
   strcat(random,niveau);// on associe le niveau a l'entête
