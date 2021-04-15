@@ -6,5 +6,5 @@ uninstall:
 test : lib_functions.o 
 	gcc lib_functions.o librairies/libtest.c -o  libtest.exe -lncurses
 	rm lib.o
-lib.o : librairies/lib_functions.c
+lib_functions.o : librairies/lib_functions.c
 	gcc -c librairies/lib_functions.c -lncurses

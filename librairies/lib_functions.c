@@ -133,7 +133,6 @@ int getMode(){
     while( mode != 2 && mode != 1 ){
         printf("\t\t --- 1 : 1 joueur --- \n");
         printf("\t\t --- 2 : 2 joueurs --- \n");
-        scanf("%d",&mode);
         while(scanf("%d",&mode) != 1) // demande à l'utilisateur de saisir le mode
         {
             printf("Entrez un ENTIER : ");
